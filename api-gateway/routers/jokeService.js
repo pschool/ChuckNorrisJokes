@@ -13,7 +13,12 @@ router.get('/jokes/random', (req, res) => {
 
 router.get('/jokes/random/:amount', (req, res) => {
     api.get(req.path).then(response => {
-        res.send(response.data)
+        if (response.data.type === 'success') {
+            res.send(response.data.value)
+        }
+        else {
+            console.error('Request was not successful.')
+        }
     })
 })
 
