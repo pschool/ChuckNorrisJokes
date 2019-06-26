@@ -1,0 +1,13 @@
+<div class="component">
+    <div class="jokeWrapper">
+        <ul>
+            <li *ngFor="let joke of jokes" [ngClass]="{'active': isActive(joke)}" (click)="selectJoke(joke)">
+                {{displayJoke(joke)}}
+            </li>
+        </ul>
+    </div>
+
+    <div class="actions">
+        <button (click)="action()">{{actionButtonText}}</button>
+    </div>
+</div>

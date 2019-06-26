@@ -1,0 +1,7 @@
+.jokeDisplay {
+    display: inline-block;
+
+    &:nth-child(1) {
+        margin-left: 10px;
+    }
+}
