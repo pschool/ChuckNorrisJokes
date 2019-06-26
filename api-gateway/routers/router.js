@@ -1,6 +1,7 @@
 var express = require('express');
 var router = express.Router()
 var jokeService = require('./jokeService')
+var authenticationService = require('./authenticationService')
 
 router.use((req, res, next) => {
     res = addHeaders(res);
@@ -23,5 +24,6 @@ function addHeaders(res) {
 }
 
 router.use(jokeService)
+router.use(authenticationService)
 
 module.exports = router
