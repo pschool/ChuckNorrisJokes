@@ -21,9 +21,12 @@ router.post('/authentication/login', (req, res) => {
 
     if (email && password) {
         const client = new MongoClient(uri, clientOptions);
+        console.log('start');
         client.connect(() => {
+            console.log('connected');
             const users = client.db("chuckNorris").collection("users");
             users.findOne({ "email": email }).then(result => {
+                console.log('searched');
                 if (result.password === sha512(password, result.salt)) {
                     console.log(`Successful login for: ${email}`)
 
@@ -43,6 +46,10 @@ router.post('/authentication/login', (req, res) => {
                 client.close();
             });
         });
+    } else {
+        console.log('Email or password not found');
+        res.status(400);
+        res.send();
     }
 })
 
@@ -75,6 +82,10 @@ router.post('/authentication/register', (req, res) => {
                 res.send();
             });
         });
+    } else {
+        console.log('Email or password not found');
+        res.status(400);
+        res.send();
     }
 });
 

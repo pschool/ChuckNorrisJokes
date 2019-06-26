@@ -1,0 +1,20 @@
+<div class="background">
+    <div class="loginCmp">
+        <div class="header">Chuck Norris Jokes - Registration</div>
+        <div class="content">
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                <label>Email:</label>
+                <input type="text" autofocus formControlName="username" placeholder="Username" />
+
+                <label>Password:</label>
+                <input type="password" formControlName="password" placeholder="Password" />
+
+                <label>Password repeat:</label>
+                <input type="password" formControlName="passwordRepeat" placeholder="Password repeat" />
+                <i class="loadingIcon fas fa-spinner fa-pulse" *ngIf="loading"></i>
+                <div style="float: left;" class="loginError" *ngIf="noPassMatch">Passwords do not match.</div>
+                <button [disabled]="loading || loginForm.invalid" type="submit">Register</button>
+            </form>
+        </div>
+    </div>
+</div>

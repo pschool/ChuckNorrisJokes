@@ -1,0 +1,19 @@
+<div class="background">
+    <div class="loginCmp">
+        <div class="header">Chuck Norris Jokes - Login </div>
+        <div class="content">
+            <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
+                <label>Email:</label>
+                <input type="text" autofocus formControlName="username" placeholder="Username" />
+
+                <label>Password:</label>
+                <input type="password" formControlName="password" placeholder="Password" />
+                <i class="loadingIcon fas fa-spinner fa-pulse" *ngIf="loading"></i>
+                <div style="float: left;" class="loginError" *ngIf="submitted && !loading">Username or password
+                    incorrect.</div>
+                <a [routerLink]="['/register']">Register</a>
+                <button [disabled]="loading || loginForm.invalid" type="submit">Log in</button>
+            </form>
+        </div>
+    </div>
+</div>

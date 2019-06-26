@@ -1,8 +1,10 @@
-<div class="jokeDisplay" *ngIf="jokes">
+<!-- <div class="jokeDisplay" *ngIf="jokes">
   <app-joke-list [jokes]="jokes" [actionButtonText]="'Add to favorites'" (selectedJoke)="addJokeToFavorites($event)">
   </app-joke-list>
 </div>
 <div class="jokeDisplay" *ngIf="favorites.length > 0">
   <app-joke-list [jokes]="favorites" [actionButtonText]="'Remove from favorites'"
     (selectedJoke)="removeJokeFromFavorites($event)"></app-joke-list>
-</div>
+</div> -->
+
+<router-outlet></router-outlet>
