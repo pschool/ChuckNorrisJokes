@@ -30,7 +30,7 @@ router.post('/authentication/login', (req, res) => {
                 if (result.password === sha512(password, result.salt)) {
                     console.log(`Successful login for: ${email}`)
 
-                    var token = jwt.sign({ "id": result._id }, tokenSecret);
+                    var token = jwt.sign({ "id": result._id, "email": result.email }, tokenSecret);
                     res.status(200);
                     res.send({ "token": token });
                 } else {

@@ -21,8 +21,7 @@ export class AuthorizationInterceptor implements HttpInterceptor {
      */
     public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
         // add authorization header if credentials are available
-        const loginCredentials: ILoginCredentials = this.authService.getLoginCredentials();
-        const currentUser: IUser = this.authService.getCurrentUser();
+        const currentUser: IUser = this.authService.getToken();
 
         // TODO add token auth
 

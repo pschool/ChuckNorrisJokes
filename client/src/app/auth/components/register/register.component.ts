@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
 import { AuthService } from '../../../core/services/auth/auth.service';
 
 /**
@@ -16,7 +15,7 @@ export class RegisterComponent implements OnInit {
   public submitted = false;
   public loading = false;
   public noPassMatch = false;
-  public returnUrl = '/';
+  public userCreated = false;
 
   /**
    * Default constructor triggered when the class is initialized.
@@ -27,9 +26,7 @@ export class RegisterComponent implements OnInit {
    */
   constructor(
     private authService: AuthService,
-    private formBuilder: FormBuilder,
-    private route: ActivatedRoute,
-    private router: Router) { }
+    private formBuilder: FormBuilder) { }
 
   /**
    * Default Angular OnInit function triggered after the constructor and before the view is initialized.
@@ -40,29 +37,28 @@ export class RegisterComponent implements OnInit {
       password: ['', Validators.required],
       passwordRepeat: ['', Validators.required]
     });
-
-    // get return url from route parameters or default to '/'
-    this.returnUrl = this.route.snapshot.queryParams.returnUrl || '/';
   }
 
   /**
    * Triggers when the login form is submitted.
    */
   public onSubmit(): void {
-    this.submitted = true;
+    this.noPassMatch = false;
 
     if (this.loginForm.invalid) {
+      this.loginForm.markAsPristine();
       return;
     }
 
-    this.loading = true;
+    this.submitted = true;
 
     if (this.loginForm.controls.password.value === this.loginForm.controls.passwordRepeat.value) {
+      this.loading = true;
       this.authService.register(
         this.loginForm.controls.username.value,
         this.loginForm.controls.password.value,
         () => {
-          this.router.navigate([this.returnUrl]);
+          this.userCreated = true;
         },
         error => {
           error.ShowUser = false;

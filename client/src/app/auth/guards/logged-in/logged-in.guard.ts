@@ -16,8 +16,6 @@ export class LoggedInGuard implements CanActivate {
     constructor(private authService: AuthService, private router: Router) { }
 
     canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
-        console.log('check');
-        console.log(this.authService.isLoggedIn());
         if (this.authService.isLoggedIn()) {
             return true;
         } else {

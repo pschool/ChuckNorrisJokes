@@ -12,8 +12,10 @@
                 <label>Password repeat:</label>
                 <input type="password" formControlName="passwordRepeat" placeholder="Password repeat" />
                 <i class="loadingIcon fas fa-spinner fa-pulse" *ngIf="loading"></i>
-                <div style="float: left;" class="loginError" *ngIf="noPassMatch">Passwords do not match.</div>
-                <button [disabled]="loading || loginForm.invalid" type="submit">Register</button>
+                <label class="loginError" *ngIf="noPassMatch">Passwords do not match.</label>
+                <label *ngIf="userCreated">User created successfully. Click <a [routerLink]="'/login'">here</a> to
+                    login.</label>
+                <button *ngIf="!userCreated" [disabled]="loading || loginForm.invalid" type="submit">Register</button>
             </form>
         </div>
     </div>

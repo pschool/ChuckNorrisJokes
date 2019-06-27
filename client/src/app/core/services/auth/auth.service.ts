@@ -2,13 +2,9 @@ import { Inject, Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { AuthenticationService } from '../api/authentication/authentication.service';
 
-export interface IUser {
-  email?: string;
-}
-
-export interface ILoginCredentials {
+export interface ITokenData {
   email: string;
-  password: string;
+  id: string;
 }
 
 /**
@@ -41,7 +37,7 @@ export class AuthService {
   public register(
     email: string,
     password: string,
-    success?: (user: IUser) => void,
+    success?: () => void,
     failure?: (error: any) => void,
     final?: () => void): void {
 
@@ -49,9 +45,9 @@ export class AuthService {
       email,
       password,
       response => {
-        const user: IUser = {
-          email
-        };
+        if (success) {
+          success();
+        }
       },
       failure,
       () => {
@@ -71,7 +67,7 @@ export class AuthService {
   public login(
     email: string,
     password: string,
-    success?: (user: IUser) => void,
+    success?: (user: any) => void,
     failure?: (error: any) => void,
     final?: () => void): void {
 
@@ -79,7 +75,7 @@ export class AuthService {
       email,
       password,
       response => {
-        const user: IUser = {
+        const user = {
           email
         };
         // TODO: use token
@@ -101,8 +97,9 @@ export class AuthService {
    * Obtains the JWT.
    * Returns 'null' if not logged in.
    */
-  public getToken(): IUser {
-    return JSON.parse(localStorage.getItem(AuthService.tokenStorageKey));
+  public getToken(): ITokenData {
+    const token = localStorage.getItem(AuthService.tokenStorageKey);
+    return this.decodeToken(token);
   }
 
   /**
@@ -118,5 +115,35 @@ export class AuthService {
   public logout(): void {
     localStorage.removeItem(AuthService.tokenStorageKey);
     this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.routerState.snapshot.url } });
+  }
+
+  public decodeToken(token: string = ''): ITokenData {
+    if (token === null || token === '') { return; }
+    const parts = token.split('.');
+    if (parts.length !== 3) {
+      throw new Error('JWT is not complete');
+    }
+    const decoded = this.urlBase64Decode(parts[1]);
+    if (!decoded) {
+      throw new Error('Cannot decode token');
+    }
+    return JSON.parse(decoded);
+  }
+
+  private urlBase64Decode(str: string) {
+    let output = str.replace(/-/g, '+').replace(/_/g, '/');
+    switch (output.length % 4) {
+      case 0:
+        break;
+      case 2:
+        output += '==';
+        break;
+      case 3:
+        output += '=';
+        break;
+      default:
+        throw new Error('Incorrect base64 string');
+    }
+    return decodeURIComponent((window as any).escape(window.atob(output)));
   }
 }
