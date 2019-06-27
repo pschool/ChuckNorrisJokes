@@ -7,6 +7,7 @@ import { AppComponent } from './app.component';
 import { CoreModule } from './core/core.module';
 import { SharedModule } from './shared/shared.module';
 import { AuthModule } from './auth/auth.module';
+import { DisplayModule } from './display/display.module';
 
 @NgModule({
   declarations: [
@@ -18,6 +19,7 @@ import { AuthModule } from './auth/auth.module';
     BrowserModule,
     SharedModule,
     CoreModule,
+    DisplayModule,
     AppRoutingModule
   ],
   providers: [],

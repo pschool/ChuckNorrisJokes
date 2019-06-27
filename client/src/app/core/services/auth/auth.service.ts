@@ -97,9 +97,16 @@ export class AuthService {
    * Obtains the JWT.
    * Returns 'null' if not logged in.
    */
-  public getToken(): ITokenData {
-    const token = localStorage.getItem(AuthService.tokenStorageKey);
-    return this.decodeToken(token);
+  public getTokenData(): ITokenData {
+    return this.decodeToken(this.getToken());
+  }
+
+  /**
+   * Obtains the JWT.
+   * Returns 'null' if not logged in.
+   */
+  public getToken(): string {
+    return localStorage.getItem(AuthService.tokenStorageKey);
   }
 
   /**

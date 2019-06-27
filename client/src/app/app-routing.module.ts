@@ -5,9 +5,10 @@ import { LoginComponent } from './auth/components/login/login.component';
 import { LoggedOutGuard } from './auth/guards/logged-out/logged-out.guard';
 import { AppComponent } from './app.component';
 import { RegisterComponent } from './auth/components/register/register.component';
+import { MainDisplayComponent } from './display/components/main-display/main-display.component';
 
 const routes: Routes = [
-  { path: '', component: AppComponent, canActivate: [LoggedInGuard] },
+  { path: '', component: MainDisplayComponent, canActivate: [LoggedInGuard] },
   { path: 'login', component: LoginComponent, canActivate: [LoggedOutGuard] },
   { path: 'register', component: RegisterComponent, canActivate: [LoggedOutGuard] }
 ];
