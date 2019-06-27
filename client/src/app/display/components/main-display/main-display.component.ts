@@ -18,35 +18,47 @@ export class MainDisplayComponent implements OnInit {
     private authService: AuthService) { }
 
   ngOnInit(): void {
-    this.jokesService.GetJokes(10, jokes => {
+    this.jokesService.getJokes(10, jokes => {
       this.jokes = jokes;
     });
 
-    const tmpJokes: Joke[] = JSON.parse(localStorage.getItem(this.localStorageKey));
-    if (tmpJokes) {
-      this.favorites = tmpJokes;
-    }
+    this.jokesService.getFavorites(jokes => {
+      this.favorites = jokes;
+    });
   }
 
+  /**
+   * Removes the JWT token.
+   */
   public logout() {
     this.authService.logout();
   }
 
+  /**
+   * Adds joke to users favorites.
+   * @param joke - Joke to add.
+   */
   public addJokeToFavorites(joke: Joke): void {
     if (this.favorites.length >= 10) {
       return;
     }
 
     if (this.favorites.indexOf(joke) < 0) {
-      this.favorites.push(joke);
-      localStorage.setItem(this.localStorageKey, JSON.stringify(this.favorites));
+      this.jokesService.addToFavorites(joke, responseJokes => {
+        this.favorites = responseJokes;
+      });
     }
   }
 
+  /**
+   * Removes joke from users favorites.
+   * @param joke - Joke to remove.
+   */
   public removeJokeFromFavorites(joke: Joke): void {
     if (this.favorites.indexOf(joke) >= 0) {
-      this.favorites.splice(this.favorites.indexOf(joke), 1);
-      localStorage.setItem(this.localStorageKey, JSON.stringify(this.favorites));
+      this.jokesService.removeFromFavorites(joke, responseJokes => {
+        this.favorites = responseJokes;
+      });
     }
   }
 }

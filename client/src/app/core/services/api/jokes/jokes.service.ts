@@ -20,7 +20,7 @@ export class JokesService {
   /**
    * Get the users that are allowed to perform the activity.
    */
-  public GetJokes(
+  public getJokes(
     amount: number,
     success?: (response: Joke[]) => void,
     failure?: (error: any) => void,
@@ -48,4 +48,97 @@ export class JokesService {
       );
   }
 
+  /**
+   * Obtains a users favorite jokes.
+   */
+  public getFavorites(
+    success?: (response: Joke[]) => void,
+    failure?: (error: any) => void,
+    final?: () => void
+  ): Subscription {
+    return this.httpClient
+      .get<Joke[]>(`http://localhost:3000/jokes/favorites`)
+      .pipe(finalize(() => {
+        if (final) {
+          final();
+        }
+      }))
+      .subscribe(
+        (response) => {
+          if (success) {
+            success(response);
+          }
+        },
+        (err: HttpErrorResponse) => {
+          console.error(err);
+          if (failure) {
+            failure(err);
+          }
+        }
+      );
+  }
+
+  /**
+   * Adds given joke to users favorites.
+   * @param joke - Joke to add.
+   */
+  public addToFavorites(
+    joke: Joke,
+    success?: (response: Joke[]) => void,
+    failure?: (error: any) => void,
+    final?: () => void
+  ): Subscription {
+    return this.httpClient
+      .post<Joke[]>(`http://localhost:3000/jokes/favorites`, { joke })
+      .pipe(finalize(() => {
+        if (final) {
+          final();
+        }
+      }))
+      .subscribe(
+        (response) => {
+          if (success) {
+            success(response);
+          }
+        },
+        (err: HttpErrorResponse) => {
+          console.error(err);
+          if (failure) {
+            failure(err);
+          }
+        }
+      );
+  }
+
+  /**
+   * Removes given joke from users favorites.
+   * @param joke - Joke to remove.
+   */
+  public removeFromFavorites(
+    joke: Joke,
+    success?: (response: Joke[]) => void,
+    failure?: (error: any) => void,
+    final?: () => void
+  ): Subscription {
+    return this.httpClient
+      .delete<Joke[]>(`http://localhost:3000/jokes/favorites/${joke.id}`)
+      .pipe(finalize(() => {
+        if (final) {
+          final();
+        }
+      }))
+      .subscribe(
+        (response) => {
+          if (success) {
+            success(response);
+          }
+        },
+        (err: HttpErrorResponse) => {
+          console.error(err);
+          if (failure) {
+            failure(err);
+          }
+        }
+      );
+  }
 }
