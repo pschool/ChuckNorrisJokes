@@ -5,6 +5,7 @@ import { AuthenticationService } from '../api/authentication/authentication.serv
 export interface ITokenData {
   email: string;
   id: string;
+  timestamp: number;
 }
 
 /**
@@ -106,7 +107,21 @@ export class AuthService {
    * Returns 'null' if not logged in.
    */
   public getToken(): string {
-    return localStorage.getItem(AuthService.tokenStorageKey);
+    if (!localStorage.getItem(AuthService.tokenStorageKey)) {
+      return null;
+    }
+
+    const currentTimestamp: number = new Date().getTime();
+    const tokenTimestamp: number = this.decodeToken(localStorage.getItem(AuthService.tokenStorageKey)).timestamp;
+    const timeDiff = currentTimestamp - tokenTimestamp;
+
+    // Destroy token if it is to old.
+    if (timeDiff > 86400000) {
+      this.logout();
+      return null;
+    } else {
+      return localStorage.getItem(AuthService.tokenStorageKey);
+    }
   }
 
   /**
@@ -124,7 +139,7 @@ export class AuthService {
     this.router.navigate(['/login'], { queryParams: { returnUrl: this.router.routerState.snapshot.url } });
   }
 
-  public decodeToken(token: string = ''): ITokenData {
+  private decodeToken(token: string = ''): ITokenData {
     if (token === null || token === '') { return; }
     const parts = token.split('.');
     if (parts.length !== 3) {
