@@ -14,7 +14,30 @@
                 <i class="loadingIcon fas fa-spinner fa-pulse" *ngIf="loading"></i>
                 <label class="loginError" *ngIf="noPassMatch">Passwords do not match.</label>
                 <label *ngIf="userCreated">User created successfully. Click <a [routerLink]="'/login'">here</a> to
-                    login.</label>
+                    login.
+                </label>
+
+                <label class="loginError" *ngIf="passRequirementsFailed">Passwords does not meet requirements.</label>
+                <ul *ngIf="passRequirementsFailed">
+                    <li>
+                        Passwords must include one increasing straight of at least three letters, like ‘abc’, ‘cde’,
+                        ‘fgh’, and so on, up to ‘xyz’.
+                    </li>
+                    <li>
+                        They cannot skip letters so e.g. ‘acd’ doesn't count.
+                    </li>
+                    <li>
+                        Passwords may not contain the letters i, O, or l, as these letters can be mistaken for other
+                        characters and are therefore confusing.
+                    </li>
+                    <li>
+                        Passwords must contain at least two non-overlapping pairs of letters, like aa, bb, or cc.
+                    </li>
+                    <li>
+                        Passwords cannot be longer than 32 characters.
+                    </li>
+                </ul>
+
                 <button *ngIf="!userCreated" [disabled]="loading || loginForm.invalid" type="submit">Register</button>
             </form>
         </div>
