@@ -20,11 +20,11 @@ export class AuthorizationInterceptor implements HttpInterceptor {
      * @param next - Angular class that will handle the modified request.
      */
     public intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-        // add authorization header if credentials are available
-        if (this.authService.getToken()) {
+        const jwt: string = this.authService.getToken();
+        if (!!jwt) {
             request = request.clone({
                 setHeaders: {
-                    Authorization: this.authService.getToken()
+                    Authorization: `${jwt}`
                 }
             });
         }

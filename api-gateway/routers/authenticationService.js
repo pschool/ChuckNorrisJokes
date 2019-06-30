@@ -1,13 +1,10 @@
 var express = require('express');
 var crypto = require('crypto');
-var jwt = require('jsonwebtoken');
+var tokenService = require('../tokenService');
 var router = express.Router();
+
 const MongoClient = require('mongodb').MongoClient;
-
-const tokenSecret = 'verySecretToken'
-
 const uri = "mongodb+srv://admin:admin@cluster0-p0eqk.mongodb.net/test?retryWrites=true&w=majority";
-
 var clientOptions = {
     keepAlive: 1,
     connectTimeoutMS: 30000,
@@ -21,16 +18,12 @@ router.post('/authentication/login', (req, res) => {
 
     if (email && password) {
         const client = new MongoClient(uri, clientOptions);
-        console.log('start');
         client.connect(() => {
-            console.log('connected');
             const users = client.db("chuckNorris").collection("users");
             users.findOne({ "email": email }).then(result => {
-                console.log('searched');
                 if (result.password === sha512(password, result.salt)) {
                     console.log(`Successful login for: ${email}`)
-
-                    var token = jwt.sign({ "id": result._id, "email": result.email }, tokenSecret);
+                    var token = tokenService.createToken(result._id, result.email);
                     res.status(200);
                     res.send({ "token": token });
                 } else {
