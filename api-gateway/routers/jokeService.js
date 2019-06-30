@@ -72,20 +72,18 @@ router.post('/jokes/favorites', (req, res) => {
         client.connect(() => {
             const users = client.db("chuckNorris").collection("users");
             users.findOne({ "_id": ObjectId(userID) }).then(result => {
-
-                // Prevent adding more then 10 favorite jokes.
-                if (result.favoriteJokes.length >= 10) {
-                    res.status(405);
-                    res.send('Limit of 10 favorite jokes reached.');
-                }
-
-                // Prevent adding duplicate favorites
-                if (findJokeIndex(result.favoriteJokes, newJoke.id) >= 0) {
-                    res.status(405);
-                    res.send('Cannot add duplicate jokes.');
-                }
-
                 if (result.favoriteJokes) {
+                    // Prevent adding more then 10 favorite jokes.
+                    if (result.favoriteJokes.length >= 10) {
+                        res.status(405);
+                        res.send('Limit of 10 favorite jokes reached.');
+                    }
+
+                    // Prevent adding duplicate favorites
+                    if (findJokeIndex(result.favoriteJokes, newJoke.id) >= 0) {
+                        res.status(405);
+                        res.send('Cannot add duplicate jokes.');
+                    }
                     result.favoriteJokes.push(newJoke);
                 } else {
                     result.favoriteJokes = [newJoke];
@@ -105,7 +103,7 @@ router.post('/jokes/favorites', (req, res) => {
                 });
                 res.send(result.favoriteJokes);
             }).catch(err => {
-                loggingService.log(`Error finding user with id: '${userID}', error: '${err}'`, 'error');
+                loggingService.log(`Failed to add new joke to favorites for userId: '${userID}', error: '${err}'`, 'error');
                 res.status(500);
                 res.send('Could not find user.');
             }).finally(() => {
