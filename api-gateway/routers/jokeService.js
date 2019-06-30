@@ -91,7 +91,7 @@ router.post('/jokes/favorites', (req, res) => {
                 users.updateOne(
                     { "_id": ObjectId(userID) },
                     { $set: { "favoriteJokes": result.favoriteJokes } }
-                ).then(result => {
+                ).then(() => {
                     res.status(200);
                     res.send(result.favoriteJokes);
                 }).catch(err => {
@@ -130,7 +130,7 @@ router.delete('/jokes/favorites/:id', (req, res) => {
                 users.updateOne(
                     { "_id": ObjectId(userID) },
                     { $set: { "favoriteJokes": result.favoriteJokes } }
-                ).then(result => {
+                ).then(() => {
                     res.status(200);
                     res.send(result.favoriteJokes);
                 }).catch(err => {
@@ -149,7 +149,6 @@ router.delete('/jokes/favorites/:id', (req, res) => {
             });
         });
     });
-    let joke = req.body.joke;
 });
 
 function getUserID(token) {

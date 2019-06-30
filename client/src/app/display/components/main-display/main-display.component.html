@@ -11,7 +11,7 @@
             (selectedJoke)="addJokeToFavorites($event)">
         </app-joke-list>
     </div>
-    <div class="jokeDisplay" *ngIf="favorites.length > 0">
+    <div class="jokeDisplay" *ngIf="favorites">
         <app-joke-list [jokes]="favorites" [actionButtonText]="'Remove from favorites'"
             (selectedJoke)="removeJokeFromFavorites($event)"></app-joke-list>
     </div>
