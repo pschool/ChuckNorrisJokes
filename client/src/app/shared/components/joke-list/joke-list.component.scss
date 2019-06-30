@@ -43,6 +43,12 @@
         height: 40px;
         background-color: #ccc;
 
+        span {
+            margin-left: 10px;
+            line-height: 40px;
+            color: #fff;
+        }
+
         button {
             float: right;
             height: 100%;
