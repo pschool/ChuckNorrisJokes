@@ -15,4 +15,6 @@
         <app-joke-list [jokes]="favorites" [actionButtonText]="'Remove from favorites'"
             (selectedJoke)="removeJokeFromFavorites($event)"></app-joke-list>
     </div>
+
+    <button (click)="startFillingFavorites()">Add random favorite jokes</button>
 </div>

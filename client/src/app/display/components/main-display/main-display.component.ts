@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Joke } from '../../../core/definitions/dto/joke';
 import { JokesService } from '../../../core/services/api/jokes/jokes.service';
 import { AuthService } from '../../../core/services/auth/auth.service';
+import { throwIfEmpty } from 'rxjs/operators';
 
 @Component({
   selector: 'app-main-display',
@@ -60,5 +61,28 @@ export class MainDisplayComponent implements OnInit {
         this.favorites = responseJokes;
       });
     }
+  }
+
+  /**
+   * Adds one random joke every 5 seconds.
+   * Limits at 10 favorite jokes.
+   */
+  public async startFillingFavorites(): Promise<void> {
+    for (let i: number = this.favorites.length; i < 10; i++) {
+      await this.delay(5000);
+      this.jokesService.getJokes(1, jokes => {
+        this.jokesService.addToFavorites(jokes[0], responseJokes => {
+          this.favorites = responseJokes;
+        });
+      });
+    }
+  }
+
+  /**
+   * Forces code to wait.
+   * @param ms - Amount of milliseconds to wait.
+   */
+  public delay(ms: number): Promise<any> {
+    return new Promise(resolve => setTimeout(resolve, ms));
   }
 }
