@@ -4,6 +4,22 @@
     height: 60px;
     background-color: #333;
 
+    button {
+        margin-right: 20px;
+        border: none;
+        background-color: rgb(0, 125, 155);
+        color: #fff;
+        margin-top: 10px;
+        margin-left: 20px;
+        width: 200px;
+        height: 40px;
+        line-height: 40px;;
+
+        &:hover {
+            background-color: rgb(15, 140, 170);
+        }
+    }
+
     .user {
         float: right;
         text-align: right;
@@ -16,13 +32,12 @@
 
         button {
             margin-right: 20px;
-            border: none;
-            background-color: rgb(0, 125, 155);
-            color: #fff;
             right: 0;
+            margin-top: 0;
             width: 100px;
             height: 30px;
-
+            line-height: 30px;
+    
             &:hover {
                 background-color: rgb(15, 140, 170);
             }
@@ -31,13 +46,14 @@
 }
 
 .content {
-    padding: 10px 5px;
+    .jokeDisplayWrapper {
+        margin: 30px auto 0 auto;
+        width: fit-content;
+        height: fit-content;
     
-    .jokeDisplay {
-        display: inline-block;
-
-        &:nth-child(1) {
-            margin-left: 10px;
+        .jokeDisplay {
+            display: inline-block;
+            margin-right: 20px;
         }
     }
 }

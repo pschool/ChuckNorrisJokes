@@ -1,4 +1,5 @@
 <div class="header">
+    <button (click)="startFillingFavorites()">Add random favorite jokes</button>
     <div class="user">
         <div class="email">{{userMail()}}</div>
         <button (click)="logout()">Logout</button>
@@ -6,15 +7,15 @@
 </div>
 
 <div class="content">
-    <div class="jokeDisplay" *ngIf="jokes">
-        <app-joke-list [jokes]="jokes" [actionButtonText]="'Add to favorites'"
-            (selectedJoke)="addJokeToFavorites($event)">
-        </app-joke-list>
+    <div class="jokeDisplayWrapper">
+        <div class="jokeDisplay" *ngIf="jokes">
+            <app-joke-list [jokes]="jokes" [actionButtonText]="'Add to favorites'"
+                (selectedJoke)="addJokeToFavorites($event)">
+            </app-joke-list>
+        </div>
+        <div class="jokeDisplay" *ngIf="favorites">
+            <app-joke-list [jokes]="favorites" [actionButtonText]="'Remove from favorites'"
+                (selectedJoke)="removeJokeFromFavorites($event)"></app-joke-list>
+        </div>
     </div>
-    <div class="jokeDisplay" *ngIf="favorites">
-        <app-joke-list [jokes]="favorites" [actionButtonText]="'Remove from favorites'"
-            (selectedJoke)="removeJokeFromFavorites($event)"></app-joke-list>
-    </div>
-
-    <button (click)="startFillingFavorites()">Add random favorite jokes</button>
 </div>
