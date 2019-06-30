@@ -3,6 +3,7 @@ var router = express.Router();
 var jokeService = require('./jokeService');
 var authenticationService = require('./authenticationService');
 var tokenService = require('../tokenService');
+var loggingService = require('../loggingService');
 
 router.use((req, res, next) => {
     console.log(`Request: ${req.path}, Method: ${req.method}`);
@@ -20,7 +21,7 @@ router.use((req, res, next) => {
             tokenService.validateToken(token).then(token => {
                 next();
             }).catch(() => {
-                console.log(`Request: ${req.path} was blocked`);
+                loggingService.log(`Request: ${req.path} was blocked`, 'info');
                 res.status(401);
                 res.send();
             });

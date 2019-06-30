@@ -1,6 +1,7 @@
 var express = require('express');
 var crypto = require('crypto');
 var tokenService = require('../tokenService');
+var loggingService = require('../loggingService');
 var router = express.Router();
 
 const MongoClient = require('mongodb').MongoClient;
@@ -22,27 +23,27 @@ router.post('/authentication/login', (req, res) => {
             const users = client.db("chuckNorris").collection("users");
             users.findOne({ "email": email }).then(result => {
                 if (result.password === sha512(password, result.salt)) {
-                    console.log(`Successful login for: ${email}`)
+                    loggingService.log(`Successful login for: '${email}'`, 'info');
                     var token = tokenService.createToken(result._id, result.email);
                     res.status(200);
                     res.send({ "token": token });
                 } else {
-                    console.log(`Unsuccessful login for: ${email}`)
+                    loggingService.log(`Unsuccessful login for: '${email}'`, 'info');
                     res.status(404);
-                    res.send();
+                    res.send('Login failed.');
                 }
             }).catch(err => {
-                console.log(err);
+                loggingService.log(`Error occurred during login: '${err}'`, 'error');
                 res.status(500);
-                res.send();
+                res.send('Error during login.');
             }).finally(() => {
                 client.close();
             });
         });
     } else {
-        console.log('Email or password not found');
+        loggingService.log('Login: Email or password not found', 'info');
         res.status(400);
-        res.send();
+        res.send('Email or password is missing.');
     }
 })
 
@@ -53,7 +54,7 @@ router.post('/authentication/register', (req, res) => {
     if (email && password) {
 
         if (!checkPasswordRequirements(password)) {
-            console.log('Password does not meet requirements.');
+            loggingService.log(`Unsuccessful login for: '${email}', password does not meet requirements`, 'info');
             res.status(400);
             res.send('Password does not meet requirements.');
             return;
@@ -61,7 +62,6 @@ router.post('/authentication/register', (req, res) => {
 
         const client = new MongoClient(uri, clientOptions);
         client.connect(() => {
-            console.log(`Creating new user: '${req.body.email}'`);
             var salty = crypto.randomBytes(16).toString('base64');
 
             let user = {
@@ -72,10 +72,10 @@ router.post('/authentication/register', (req, res) => {
 
             const users = client.db("chuckNorris").collection("users");
             users.insertOne(user).then(() => {
-                console.log('User created.')
+                loggingService.log(`Created new user: '${req.body.email}'`, 'info');
                 res.status(200);
             }).catch(err => {
-                console.log(err);
+                loggingService.log(`Error occurred during user creation: '${err}'`, 'error');
                 res.status(500);
             }).finally(() => {
                 client.close();
@@ -83,7 +83,7 @@ router.post('/authentication/register', (req, res) => {
             });
         });
     } else {
-        console.log('Email or password not found');
+        loggingService.log('Register: Email or password not found', 'info');
         res.status(400);
         res.send('Email or password not found');
     }
@@ -103,7 +103,6 @@ var sha512 = function (password, salt) {
 function checkPasswordRequirements(password) {
     // Validate max length.
     if (password.length > 32) {
-        console.error('32 limit');
         return false;
     }
 
@@ -111,7 +110,6 @@ function checkPasswordRequirements(password) {
     const illegalItems = ['i', 'O', 'l'];
     for (const illegalItem of illegalItems) {
         if (password.includes(illegalItem)) {
-            console.error('illegal item');
             return false;
         }
     }
@@ -126,7 +124,6 @@ function checkPasswordRequirements(password) {
         }
     }
     if (!nonOverlapPassed) {
-        console.error('No overlap');
         return false;
     }
 
@@ -149,7 +146,6 @@ function checkPasswordRequirements(password) {
         }
     }
     if (!increasingStraightPassed) {
-        console.error('No increasing straight');
         return false;
     }
 

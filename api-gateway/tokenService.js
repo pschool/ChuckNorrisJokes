@@ -1,4 +1,5 @@
 var jwt = require('jsonwebtoken');
+var loggingService = require('./loggingService');
 
 const tokenSecret = 'verySecretToken'
 
@@ -14,7 +15,7 @@ exports.validateToken = function (token) {
     return new Promise(function (resolve, reject) {
         jwt.verify(token, tokenSecret, function (err, decoded) {
             if (err) {
-                console.error('Invalid token used.');
+                loggingService.log(`Invalid token received: '${token}'`, 'error');
                 reject(err);
             } else {
                 const currentTimestamp = new Date().getTime();

@@ -2,6 +2,7 @@ var express = require('express');
 var router = express.Router()
 const apiAdapter = require('./apiAdapter')
 var ObjectId = require('mongodb').ObjectId
+var loggingService = require('../loggingService');
 
 const BASE_URL = 'http://api.icndb.com'
 const api = apiAdapter(BASE_URL)
@@ -34,7 +35,7 @@ router.get('/jokes/random/:amount', (req, res) => {
             res.send(response.data.value)
         }
         else {
-            console.error('Request was not successful.')
+            loggingService.log('Could not obtain jokes from external source.', 'error');
         }
     })
 });
@@ -50,9 +51,9 @@ router.get('/jokes/favorites', (req, res) => {
             users.findOne({ "_id": ObjectId(userID) }).then(result => {
                 res.send(result.favoriteJokes);
             }).catch(err => {
-                console.log(err);
+                loggingService.log(`Error occurred obtaining favorite jokes for userId: '${userID}' error: '${err}'`, 'error');
                 res.status(500);
-                res.send();
+                res.send('Could not obtain favorites.');
             }).finally(() => {
                 client.close();
             });
@@ -96,18 +97,17 @@ router.post('/jokes/favorites', (req, res) => {
                     res.status(200);
                     res.send(result.favoriteJokes);
                 }).catch(err => {
-                    console.log('failed to add new joke to favorites.');
-                    console.log(err);
+                    loggingService.log(`Failed to add new joke to favorites for userId: '${userID}' error: '${err}'`, 'error');
                     res.status(500);
+                    res.send('Failed to add joke to favorites.');
                 }).finally(() => {
                     client.close();
-                    res.send();
                 });
                 res.send(result.favoriteJokes);
             }).catch(err => {
-                console.log(err);
+                loggingService.log(`Error finding user with id: '${userID}', error: '${err}'`, 'error');
                 res.status(500);
-                res.send();
+                res.send('Could not find user.');
             }).finally(() => {
                 client.close();
             });
@@ -137,18 +137,16 @@ router.delete('/jokes/favorites/:id', (req, res) => {
                     res.status(200);
                     res.send(result.favoriteJokes);
                 }).catch(err => {
-                    console.log(`failed to remove joke '${req.params.id}' from favorites.`);
-                    console.log(err);
+                    loggingService.log(`failed to remove joke '${req.params.id}' from favorites. for user: '${userID}', error: ${err}`, 'error');
                     res.status(500);
+                    res.send('Failed to remove joke.');
                 }).finally(() => {
                     client.close();
-                    res.send();
                 });
-                res.send(result.favoriteJokes);
             }).catch(err => {
-                console.log(err);
+                loggingService.log(`Error finding user with id: '${userID}', error: '${err}'`, 'error');
                 res.status(500);
-                res.send();
+                res.send('Could not find user.');
             }).finally(() => {
                 client.close();
             });
@@ -162,7 +160,7 @@ function getUserID(token) {
         tokenService.validateToken(token).then(decodedToken => {
             resolve(decodedToken.id);
         }).catch(() => {
-            throw new Error('Invalid Token');
+            return null;
         });
     });
 }
