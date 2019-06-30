@@ -20,11 +20,15 @@ export class MainDisplayComponent implements OnInit {
 
   ngOnInit(): void {
     this.jokesService.getJokes(10, jokes => {
-      this.jokes = jokes;
+      if (jokes) {
+        this.jokes = jokes;
+      }
     });
 
     this.jokesService.getFavorites(jokes => {
-      this.favorites = jokes;
+      if (jokes) {
+        this.favorites = jokes;
+      }
     });
   }
 
