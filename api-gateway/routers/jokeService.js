@@ -77,12 +77,14 @@ router.post('/jokes/favorites', (req, res) => {
                     if (result.favoriteJokes.length >= 10) {
                         res.status(405);
                         res.send('Limit of 10 favorite jokes reached.');
+                        return;
                     }
 
                     // Prevent adding duplicate favorites
                     if (findJokeIndex(result.favoriteJokes, newJoke.id) >= 0) {
                         res.status(405);
                         res.send('Cannot add duplicate jokes.');
+                        return;
                     }
                     result.favoriteJokes.push(newJoke);
                 } else {
