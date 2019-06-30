@@ -101,7 +101,6 @@ router.post('/jokes/favorites', (req, res) => {
                 }).finally(() => {
                     client.close();
                 });
-                res.send(result.favoriteJokes);
             }).catch(err => {
                 loggingService.log(`Failed to add new joke to favorites for userId: '${userID}', error: '${err}'`, 'error');
                 res.status(500);
