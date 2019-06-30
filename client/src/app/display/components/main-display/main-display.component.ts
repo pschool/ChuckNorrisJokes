@@ -39,6 +39,10 @@ export class MainDisplayComponent implements OnInit {
     this.authService.logout();
   }
 
+  public userMail() {
+    return this.authService.getTokenData().email;
+  }
+
   /**
    * Adds joke to users favorites.
    * @param joke - Joke to add.
